@@ -1,0 +1,171 @@
+import { Sun, Moon, Menu, X, Maximize2, Minimize2 } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
+import { Button } from "@/components/ui/button";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoginDialog } from "@/components/auth/LoginDialog";
+
+const navItems = [
+  { label: "Dashboard", path: "/" },
+  { label: "Produtos", path: "/produtos" },
+  { label: "Entregas", path: "/entregas" },
+  { label: "Vendas", path: "/vendas" },
+];
+
+export function Header() {
+  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error("Erro ao alternar tela cheia:", error);
+    }
+  };
+
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.path === "/vendas" && !isAuthenticated) {
+      setLoginOpen(true);
+      setMobileMenuOpen(false);
+      return;
+    }
+    navigate(item.path);
+    setMobileMenuOpen(false);
+  };
+
+  return (
+    <>
+      {/* Backdrop overlay quando menu está aberto */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 top-16 z-40 backdrop-blur-lg md:hidden animate-fade-in"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+      
+      <header className="fixed top-0 left-0 right-0 z-50 glass md:sticky">
+        <div className="container flex h-16 items-center justify-between">
+          <Link to="/" className="flex flex-col items-center">
+            <img src={theme === "light" ? "/logolcb.png" : "/logolc.png"} alt="Linda Casa Logo" className="h-10 w-auto object-contain" />
+            <span className="text-xs text-muted-foreground" style={{ fontFamily: '"Space Grotesk", sans-serif' }}></span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden items-center gap-1 md:flex">
+            {navItems.map(item => (
+              item.path === "/vendas" && !isAuthenticated ? (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavClick(item)}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-smooth hover:bg-accent ${
+                    location.pathname === item.path
+                      ? "bg-accent text-accent-foreground"
+                      : theme === "light" ? "text-slate-700 cursor-pointer dark:text-muted-foreground" : "text-muted-foreground cursor-pointer"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-smooth hover:bg-accent ${
+                    location.pathname === item.path
+                      ? "bg-accent text-accent-foreground"
+                      : theme === "light" ? "text-slate-700 dark:text-muted-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="h-9 w-9 rounded-full" title={isFullscreen ? "Sair da tela cheia" : "Tela cheia"}>
+              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            </Button>
+
+            <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-9 w-9 rounded-full">
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </Button>
+            
+            {/* Mobile Menu Button */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="h-9 w-9 rounded-full md:hidden"
+            >
+              {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation - Overlay com Glasmorfismo */}
+        {mobileMenuOpen && (
+          <div className="absolute left-0 right-0 top-16 z-50 md:hidden glass border-b shadow-lg animate-slide-down">
+            <nav className="container flex flex-col gap-1 py-3 items-center px-4 sm:px-6">
+              {navItems.map(item => (
+                item.path === "/vendas" && !isAuthenticated ? (
+                  <button
+                    key={item.path}
+                    onClick={() => handleNavClick(item)}
+                    className={`rounded-md px-3 py-2 text-sm font-medium transition-smooth hover:bg-accent w-full text-center ${
+                      location.pathname === item.path
+                        ? "bg-accent text-accent-foreground"
+                        : theme === "light" ? "text-slate-700 dark:text-muted-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`rounded-md px-3 py-2 text-sm font-medium transition-smooth hover:bg-accent ${
+                      location.pathname === item.path
+                        ? "bg-accent text-accent-foreground"
+                        : theme === "light" ? "text-slate-700 dark:text-muted-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* spacer para evitar que conteúdo fique sob o header quando fixo em mobile */}
+      <div className="md:hidden h-16" />
+
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
+    </>
+  );
+}
+
