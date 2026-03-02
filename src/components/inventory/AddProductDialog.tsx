@@ -233,9 +233,13 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
               <Label className="flex items-center gap-2">
                 <User className="h-4 w-4" /> Cadastrado por *
               </Label>
-              <select value={form.createdBy} onChange={e => update("createdBy", e.target.value as SystemUser)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                {SYSTEM_USERS.map(u => <option key={u} value={u}>{u}</option>)}
-              </select>
+                <select
+                  value={form.createdBy}
+                  onChange={e => update("createdBy", e.target.value as SystemUser)}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  {SYSTEM_USERS.map(u => <option key={u} value={u}>{u}</option>)}
+                </select>
             </div>
 
             <div className="space-y-2 sm:col-span-2">
@@ -243,6 +247,13 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
               <Input placeholder="Ex: Sofá Retrátil Florença" value={form.name} onChange={e => update("name", e.target.value)} />
             </div>
 
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Descrição</Label>
+              <Input placeholder="Detalhes adicionais do produto" value={form.description} onChange={e => update("description", e.target.value)} />
+            </div>
+
+          {/* code and quantity side-by-side even on mobile */}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Código *</Label>
               <Input placeholder="Ex: LC-0019" value={form.sku} onChange={e => update("sku", e.target.value)} />
@@ -279,42 +290,73 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
                 </div>
               )}
             </div>
+          </div> {/* end code/quantity grid */}
 
+            {/* category and unit should stay side-by-side even on mobile */}
+          <div className="grid grid-cols-2 gap-4 sm:col-span-2">
             <div className="space-y-2">
               <Label>Categoria</Label>
-              <select value={form.category} onChange={e => update("category", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+              <select
+                value={form.category}
+                onChange={e => update("category", e.target.value)}
+                className={
+                  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                }
+              >
                 {categories.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
             <div className="space-y-2">
               <Label>Unidade</Label>
-              <select value={form.unit} onChange={e => update("unit", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+              <select
+                value={form.unit}
+                onChange={e => update("unit", e.target.value)}
+                className={
+                  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                }
+              >
                 {units.map(u => <option key={u} value={u}>{u}</option>)}
               </select>
             </div>
+          </div>
 
+          {/* status, color, manufacturer on same line */}
+          <div className="grid grid-cols-3 gap-4 sm:col-span-2">
             <div className="space-y-2">
               <Label>Status</Label>
-              <select value={status} onChange={e => setStatus(e.target.value as "Disponível" | "Pedido")} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                <option value="Disponível">Disponível</option>
-                <option value="Pedido">Pedido (Fábrica)</option>
+                <select
+                  value={status}
+                  onChange={e => setStatus(e.target.value as "Disponível" | "Pedido")}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="Disponível">Disponível</option>
+                  <option value="Pedido">Pedido (Fábrica)</option>
               </select>
             </div>
 
             <div className="space-y-2">
               <Label>Cor</Label>
-              <select value={form.color} onChange={e => update("color", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+              <select
+                value={form.color}
+                onChange={e => update("color", e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
                 {colors.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
             <div className="space-y-2">
               <Label>Fabricante</Label>
-              <select value={form.manufacturer} onChange={e => update("manufacturer", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+              <select
+                value={form.manufacturer}
+                onChange={e => update("manufacturer", e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
                 {MANUFACTURERS.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
+          </div>
           </div>
 
           {form.category === "Sofá" && (
@@ -325,7 +367,11 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Tamanho (metros)</Label>
-                  <select value={sofaDetails.size} onChange={e => updateSofa("size", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <select
+                    value={sofaDetails.size}
+                    onChange={e => updateSofa("size", e.target.value)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
                     <option value="1.50">1,50m</option>
                     <option value="1.80">1,80m</option>
                     <option value="2.00">2,00m</option>
@@ -339,7 +385,11 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
 
                 <div className="space-y-2">
                   <Label>Número de Lugares</Label>
-                  <select value={sofaDetails.seats} onChange={e => updateSofa("seats", Number(e.target.value))} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <select
+                    value={sofaDetails.seats}
+                    onChange={e => updateSofa("seats", Number(e.target.value))}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
                     <option value={2}>2 lugares</option>
                     <option value={3}>3 lugares</option>
                     <option value={4}>4 lugares</option>
@@ -350,14 +400,22 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
 
                 <div className="space-y-2">
                   <Label>Tecido</Label>
-                  <select value={sofaDetails.fabric} onChange={e => updateSofa("fabric", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <select
+                    value={sofaDetails.fabric}
+                    onChange={e => updateSofa("fabric", e.target.value)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
                     {fabrics.map(f => <option key={f} value={f}>{f}</option>)}
                   </select>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Fabricante do Sofá</Label>
-                  <select value={sofaDetails.manufacturer} onChange={e => updateSofa("manufacturer", e.target.value)} className="w-full rounded-lg border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <select
+                    value={sofaDetails.manufacturer}
+                    onChange={e => updateSofa("manufacturer", e.target.value)}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
                     {MANUFACTURERS.map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
@@ -405,13 +463,25 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
                         }} />
                       </div>
                       <div className="grid gap-2 sm:grid-cols-3 mt-2">
-                        <select value={it.category || form.category} onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,category:e.target.value}:p))} className="rounded-lg border bg-card px-3 py-2 text-sm">
+                        <select
+                          value={it.category || form.category}
+                          onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,category:e.target.value}:p))}
+                          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        >
                           {categories.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
-                        <select value={it.color || form.color} onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,color:e.target.value}:p))} className="rounded-lg border bg-card px-3 py-2 text-sm">
+                        <select
+                          value={it.color || form.color}
+                          onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,color:e.target.value}:p))}
+                          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        >
                           {colors.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
-                        <select value={it.manufacturer || form.manufacturer} onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,manufacturer:e.target.value}:p))} className="rounded-lg border bg-card px-3 py-2 text-sm">
+                        <select
+                          value={it.manufacturer || form.manufacturer}
+                          onChange={e => setBatchItems(prev => prev.map((p,i)=> i===idx?{...p,manufacturer:e.target.value}:p))}
+                          className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        >
                           {MANUFACTURERS.map(m => <option key={m} value={m}>{m}</option>)}
                         </select>
                       </div>
@@ -447,11 +517,6 @@ export function AddProductDialog({ open: controlledOpen, onOpenChange, trigger }
               </div>
             </div>
           )}
-
-          <div className="space-y-2">
-            <Label>Descrição</Label>
-            <Input placeholder="Detalhes adicionais do produto" value={form.description} onChange={e => update("description", e.target.value)} />
-          </div>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2">

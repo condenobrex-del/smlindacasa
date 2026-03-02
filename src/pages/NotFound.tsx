@@ -11,10 +11,10 @@ const NotFound = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">CALMA 404</h1>
-        <p className="mb-4 text-xl text-slate-700 dark:text-muted-foreground">Bahhh! CALMA!🖐 RAFAEL TÁ MEXENDO AINDA 😅</p>
+        <h1 className="mb-4 text-4xl font-bold">BAHHHH</h1>
+        <p className="mb-4 text-xl text-slate-700 dark:text-muted-foreground">CALMA!🖐 O RAFAEL TÁ MEXENDO AINDA 😅</p>
         <a href="/" className="text-primary underline hover:text-primary/90">
-          Retorne ao aplicativo.
+          Clique aqui e retorne ao aplicativo enquanto ele fuça lá.
         </a>
       </div>
     </div>

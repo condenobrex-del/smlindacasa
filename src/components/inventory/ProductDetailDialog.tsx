@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Package, MapPin, Palette, Ruler, Factory, Armchair } from "lucide-react";
+import { Package, MapPin, Palette, Ruler, Factory, Armchair, Scissors } from "lucide-react";
 
 interface ProductDetailDialogProps {
   product: Product;
@@ -95,14 +95,14 @@ export function ProductDetailDialog({ product, open, onOpenChange }: ProductDeta
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-base">🛋️</span>
+                  <Armchair className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">
                     <span className="text-muted-foreground">Lugares:</span>{" "}
                     <strong>{product.sofaDetails.seats}</strong>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-base">🧵</span>
+                  <Scissors className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">
                     <span className="text-muted-foreground">Tecido:</span>{" "}
                     <strong>{product.sofaDetails.fabric}</strong>

@@ -26,7 +26,7 @@ interface InventoryContextType {
   };
 }
 
-const InventoryContext = createContext<InventoryContextType | null>(null);
+export const InventoryContext = createContext<InventoryContextType | null>(null);
 
 export function InventoryProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>(() => generateMockProducts());
